@@ -63,7 +63,6 @@ function handleClick(e, cb) {
 
 function handleTouch(e, cb) {
   //get average coords
-  console.log(typeof e.touches);
   let x = 0;
   let y = 0;
   for (let i = 0; i < e.touches.length; i++) {
@@ -72,7 +71,6 @@ function handleTouch(e, cb) {
   }
   x = parseInt(x / e.touches.length);
   y = parseInt(y / e.touches.length);
-  console.log([x, y]);
   cb(x, y);
 }
 
