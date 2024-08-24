@@ -19,26 +19,33 @@ let isPainting = false;
 let lineWidth = 5;
 let currentStroke;
 let prevStrokes = [];
+let nextStrokes = [];
 
 function newStroke(x, y) {
+  nextStrokes = [];
   return { vectors: [x, y], color: getColor(), width: getWidth() };
 }
 
 function clearCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  prevStrokes = [];
 }
 
 toolbar.addEventListener("click", (e) => {
   if (e.target.id === "clear") {
+    prevStrokes = [];
     clearCanvas();
   }
   if (e.target.id === "save") {
     save();
   }
-
   if (e.target.id === "load") {
     load();
+  }
+  if (e.target.id === "undo") {
+    undo();
+  }
+  if (e.target.id === "redo") {
+    redo();
   }
 });
 
@@ -68,6 +75,8 @@ const startPainting = (x, y) => {
   ctx.lineCap = "round";
   ctx.strokeStyle = currentStroke.color;
   ctx.lineWidth = currentStroke.width;
+  ctx.lineTo(x - canvasOffsetX, y);
+  ctx.stroke();
   isPainting = true;
 };
 
@@ -86,16 +95,38 @@ function save() {
 function load() {
   clearCanvas();
   prevStrokes = JSON.parse(localStorage.getItem("strokes"));
-  prevStrokes.forEach((stroke) => {
+  drawArray(prevStrokes);
+}
+
+function drawArray(strokes) {
+  strokes.forEach((stroke) => {
     ctx.lineCap = "round";
     ctx.strokeStyle = stroke.color;
     ctx.lineWidth = stroke.width;
     for (let i = 0; i < stroke.vectors.length; i += 2) {
       ctx.lineTo(stroke.vectors[i], stroke.vectors[i + 1]);
+      ctx.stroke();
     }
-    ctx.stroke();
     ctx.beginPath();
   });
+}
+
+function undo() {
+  if (prevStrokes.length === 0) {
+    return;
+  }
+  nextStrokes.push(prevStrokes.pop());
+  clearCanvas();
+  drawArray(prevStrokes);
+}
+
+function redo() {
+  if (nextStrokes.length === 0) {
+    return;
+  }
+  prevStrokes.push(nextStrokes.pop());
+  clearCanvas();
+  drawArray(prevStrokes);
 }
 
 function handleClick(e, cb) {
