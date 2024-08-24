@@ -1,5 +1,12 @@
 const canvas = document.getElementById("drawing-board");
 const toolbar = document.getElementById("toolbar");
+const getColor = () => {
+  return document.getElementById("stroke").value;
+};
+const getWidth = () => {
+  let w = document.getElementById("lineWidth").value;
+  return w;
+};
 const ctx = canvas.getContext("2d");
 
 const canvasOffsetX = canvas.offsetLeft;
@@ -10,26 +17,38 @@ canvas.height = window.innerHeight - canvasOffsetY;
 
 let isPainting = false;
 let lineWidth = 5;
-let startX;
-let startY;
+let currentStroke;
+let prevStrokes = [];
+
+function newStroke(x, y) {
+  return { vectors: [x, y], color: getColor(), width: getWidth() };
+}
 
 function clearCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  prevStrokes = [];
 }
 
 toolbar.addEventListener("click", (e) => {
   if (e.target.id === "clear") {
     clearCanvas();
   }
+  if (e.target.id === "save") {
+    save();
+  }
+
+  if (e.target.id === "load") {
+    load();
+  }
 });
 
 toolbar.addEventListener("change", (e) => {
   if (e.target.id === "stroke") {
-    ctx.strokeStyle = e.target.value;
+    currentStroke.color = e.target.value;
   }
 
   if (e.target.id === "lineWidth") {
-    lineWidth = e.target.value;
+    currentStroke.width = e.target.value;
   }
 });
 
@@ -38,24 +57,46 @@ const draw = (x, y) => {
     return;
   }
 
-  ctx.lineWidth = lineWidth;
-  ctx.lineCap = "round";
-
-  ctx.lineTo(x - canvasOffsetX, y);
+  x = x - canvasOffsetX;
+  ctx.lineTo(x, y);
+  currentStroke.vectors.push(x, y);
   ctx.stroke();
 };
 
 const startPainting = (x, y) => {
+  currentStroke = newStroke(x - canvasOffsetX, y);
+  ctx.lineCap = "round";
+  ctx.strokeStyle = currentStroke.color;
+  ctx.lineWidth = currentStroke.width;
   isPainting = true;
-  startX = x;
-  startY = y;
 };
 
 const endPainting = () => {
   isPainting = false;
+  prevStrokes.push(currentStroke);
   ctx.stroke();
   ctx.beginPath();
 };
+
+function save() {
+  localStorage.removeItem("strokes");
+  localStorage.setItem("strokes", JSON.stringify(prevStrokes));
+}
+
+function load() {
+  clearCanvas();
+  prevStrokes = JSON.parse(localStorage.getItem("strokes"));
+  prevStrokes.forEach((stroke) => {
+    ctx.lineCap = "round";
+    ctx.strokeStyle = stroke.color;
+    ctx.lineWidth = stroke.width;
+    for (let i = 0; i < stroke.vectors.length; i += 2) {
+      ctx.lineTo(stroke.vectors[i], stroke.vectors[i + 1]);
+    }
+    ctx.stroke();
+    ctx.beginPath();
+  });
+}
 
 function handleClick(e, cb) {
   cb(e.clientX, e.clientY);
@@ -78,18 +119,18 @@ canvas.addEventListener("mousedown", (e) => {
   handleClick(e, startPainting);
 });
 
-canvas.addEventListener("mouseup", endPainting);
-
 canvas.addEventListener("mousemove", (e) => {
   handleClick(e, draw);
 });
+
+canvas.addEventListener("mouseup", endPainting);
 
 canvas.addEventListener("touchstart", (e) => {
   handleTouch(e, startPainting);
 });
 
-canvas.addEventListener("touchend", endPainting);
-
 canvas.addEventListener("touchmove", (e) => {
   handleTouch(e, draw);
 });
+
+canvas.addEventListener("touchend", endPainting);
