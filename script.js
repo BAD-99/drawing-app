@@ -1,13 +1,20 @@
 const canvas = document.getElementById("drawing-board");
 const toolbar = document.getElementById("toolbar");
+const palette = document.getElementById("palette");
 const getColor = () => {
-  return document.getElementById("stroke").value;
+  return _color;
 };
 const getWidth = () => {
   let w = document.getElementById("lineWidth").value;
   return w;
 };
-const ctx = canvas.getContext("2d");
+const setColor = (color) => {
+  _color = color;
+};
+let _color = "black";
+
+const ctx = canvas.getContext("2d", { alpha: false });
+ctx.image
 
 const canvasOffsetX = canvas.offsetLeft;
 const canvasOffsetY = canvas.offsetTop;
@@ -49,11 +56,14 @@ toolbar.addEventListener("click", (e) => {
   }
 });
 
-toolbar.addEventListener("change", (e) => {
-  if (e.target.id === "stroke") {
-    currentStroke.color = e.target.value;
+palette.addEventListener("click", (e) => {
+  if (e.target.id === "palette") {
+    return;
   }
+  setColor(e.target.id);
+});
 
+toolbar.addEventListener("change", (e) => {
   if (e.target.id === "lineWidth") {
     currentStroke.width = e.target.value;
   }
@@ -105,8 +115,8 @@ function drawArray(strokes) {
     ctx.lineWidth = stroke.width;
     for (let i = 0; i < stroke.vectors.length; i += 2) {
       ctx.lineTo(stroke.vectors[i], stroke.vectors[i + 1]);
-      ctx.stroke();
     }
+    ctx.stroke();
     ctx.beginPath();
   });
 }

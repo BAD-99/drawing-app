@@ -10,8 +10,6 @@
     <section class="container">
       <div id="toolbar">
         <h1>Draw.</h1>
-        <label for="stroke">Stroke</label>
-        <input id="stroke" name="stroke" type="color" />
         <label for="lineWidth">Line Width</label>
         <input id="lineWidth" name="lineWidth" type="number" value="5" />
         <button id="clear">Clear</button>
@@ -20,10 +18,21 @@
         <button id="undo">Undo</button>
         <button id="redo">Redo</button>
       </div>
-      <div class="drawing-board">
-        <canvas id="drawing-board"></canvas>
+      <div id="palette">
+        <button id="red"></button>
+        <button id="orange"></button>
+        <button id="yellow"></button>
+        <button id="green"></button>
+        <button id="blue"></button>
+        <button id="purple"></button>
+        <button id="black"></button>
+        <button id="gray"></button>
+        <button id="white"></button>
       </div>
     </section>
+    <div class="drawing-board">
+      <canvas id="drawing-board"></canvas>
+    </div>
     <script src="./script.js"></script>
   </body>
 </html>

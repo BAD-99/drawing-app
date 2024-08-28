@@ -1,45 +1,98 @@
 body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-    color: white;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  color: white;
+  display: flex;
 }
 
 h1 {
-    background: #7F7FD5;
-    background-clip: text;
+  background: #7f7fd5;
+  background-clip: text;
 }
 
 .container {
-    height: 100%;
-    display: flex;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #202020;
+  width: 70px;
+  align-items: center;
 }
 
 #toolbar {
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
-    width: 70px;
-    background-color: #202020;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
 }
 
 #toolbar * {
-    margin-bottom: 6px;
+  margin-bottom: 6px;
 }
 
 #toolbar label {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 #toolbar input {
-    width: 100%;
+  width: 100%;
 }
 
 #toolbar button {
-    background-color: #1565c0;
-    border: none;
-    border-radius: 4px;
-    color:white;
-    padding: 2px;
+  background-color: #1565c0;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  padding: 2px;
+}
+
+#palette {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+#palette button {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  border: none;
+}
+
+#red{
+    background-color: red;
+}
+
+#orange{
+    background-color: orange;
+}
+
+#yellow{
+    background-color: yellow;
+}
+
+#green{
+    background-color: green;
+}
+
+#blue{
+    background-color: blue;
+}
+
+#purple{
+    background-color: purple;
+}
+
+#black{
+    background-color: black;
+}
+
+#gray{
+    background-color: gray;
+}
+
+#white{
+    background-color: white;
 }
