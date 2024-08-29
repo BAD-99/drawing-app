@@ -14,7 +14,6 @@ const setColor = (color) => {
 let _color = "black";
 
 const ctx = canvas.getContext("2d", { alpha: false });
-ctx.image
 
 const canvasOffsetX = canvas.offsetLeft;
 const canvasOffsetY = canvas.offsetTop;
@@ -47,12 +46,6 @@ toolbar.addEventListener("click", (e) => {
   }
   if (e.target.id === "load") {
     load();
-  }
-  if (e.target.id === "undo") {
-    undo();
-  }
-  if (e.target.id === "redo") {
-    redo();
   }
 });
 
@@ -119,24 +112,6 @@ function drawArray(strokes) {
     ctx.stroke();
     ctx.beginPath();
   });
-}
-
-function undo() {
-  if (prevStrokes.length === 0) {
-    return;
-  }
-  nextStrokes.push(prevStrokes.pop());
-  clearCanvas();
-  drawArray(prevStrokes);
-}
-
-function redo() {
-  if (nextStrokes.length === 0) {
-    return;
-  }
-  prevStrokes.push(nextStrokes.pop());
-  clearCanvas();
-  drawArray(prevStrokes);
 }
 
 function handleClick(e, cb) {
